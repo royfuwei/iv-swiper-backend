@@ -11,3 +11,5 @@ export const MONGO_ADDR = env
   .default('mongodb:27017')
   .asString();
 export const MGO_DEFAULT_DB = 'swiper';
+export const MGO_POST_MODEL = 'post';
+export const MGO_COMMENT_MODEL = 'comment';
