@@ -4,3 +4,10 @@ import * as env from 'env-var';
 
 export const APP_NAME = 'interview-swiper-backend';
 export const PORT = env.get('PORT').default(3000).asPortNumber();
+
+/* mongodb constants */
+export const MONGO_ADDR = env
+  .get('MONGO_ADDR')
+  .default('mongodb:27017')
+  .asString();
+export const MGO_DEFAULT_COLLECTION = 'swiper';
