@@ -10,4 +10,4 @@ export const MONGO_ADDR = env
   .get('MONGO_ADDR')
   .default('mongodb:27017')
   .asString();
-export const MGO_DEFAULT_COLLECTION = 'swiper';
+export const MGO_DEFAULT_DB = 'swiper';
