@@ -18,17 +18,10 @@ import {
 } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
 import { ReqPostDTO } from './dto/post-req.dto';
-import {
-  ResPostCommentDTO,
-  ResPostDTO,
-  ResPostsNestCommentDTO,
-} from './dto/post-res.dto';
+import { ResPostDTO, ResPostsNestCommentDTO } from './dto/post-res.dto';
 import { PostsUseCase } from './posts.ucase';
 import { ReqCommentDTO } from '../comments/dto/comment-req.dto';
-import {
-  ApiPaginatedResponse,
-  PaginatedDTO,
-} from 'src/infrastructures/util/paginated.dto';
+import { ApiPaginatedResponse } from 'src/infrastructures/util/paginated.dto';
 import { PostNestCommentDTO } from './dto/post.dto';
 import { ResCommentDTO } from '../comments/dto/comment-res.dto';
 
@@ -52,7 +45,7 @@ export class PostsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async addPost(@Headers('uid') uid: string, @Body() body: ReqPostDTO) {
-    return {};
+    return this.postsUseCase.createPost(body, uid);
   }
 
   @ApiOperation({
@@ -60,11 +53,11 @@ export class PostsController {
   })
   @ApiOkResponse({ type: ResPostDTO })
   @Patch('/:id')
-  async updatePost(
+  async updateById(
     @Param('id', new ParseMongoIdPipe()) id: string,
     @Body() body: ReqPostDTO,
   ) {
-    return {};
+    return this.postsUseCase.updateById(id, body);
   }
 
   @ApiOperation({
@@ -72,7 +65,7 @@ export class PostsController {
   })
   @Delete('/:id')
   async deleteById(@Param('id', new ParseMongoIdPipe()) id: string) {
-    return {};
+    return this.postsUseCase.deleteById(id);
   }
 
   /* create comment by post */

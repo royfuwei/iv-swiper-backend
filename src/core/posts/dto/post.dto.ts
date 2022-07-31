@@ -15,8 +15,18 @@ export class PostDataDTO {
     example: '填寫貼文內容',
   })
   @IsString()
-  readonly content: string;
+  content?: string;
 }
+
+export class CreatePostDataDTO extends PostDataDTO {
+  @ApiProperty({
+    description: '貼文者id',
+  })
+  @IsString()
+  uid?: string;
+}
+
+export class UpdatePostDataDTO extends PostDataDTO {}
 
 export class PostDTO extends PostDataDTO {
   @ApiProperty({
@@ -24,32 +34,32 @@ export class PostDTO extends PostDataDTO {
   })
   @IsString()
   @IsMongoId()
-  readonly id: string;
+  id?: string;
   @ApiProperty({
     description: '貼文者id',
   })
   @IsString()
-  readonly uid: string;
+  uid?: string;
   @ApiProperty({
     description: '是否封存',
     default: false,
   })
   @IsBoolean()
-  readonly archived: boolean;
+  archived?: boolean;
 
   @ApiProperty({
     description: '建立時間',
   })
   @IsDate()
   @Transform((value) => new Date(value.value), { toClassOnly: true })
-  readonly creationTime: Date;
+  creationTime?: Date;
 
   @ApiProperty({
     description: '修改時間',
   })
   @IsDate()
   @Transform((value) => new Date(value.value), { toClassOnly: true })
-  readonly modiTime: Date;
+  modiTime?: Date;
 }
 
 export class PostCommentDTO extends PostDTO {

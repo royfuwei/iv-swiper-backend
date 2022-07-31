@@ -1,14 +1,13 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import _ from 'lodash';
-import { MGO_POST_MODEL } from '../../../constants';
+import _ = require('lodash');
+import { MGO_POSTS_MODEL } from '../../../constants';
 
 export type PostDocument = Post & Document;
 
 @Schema({
   timestamps: { createdAt: 'creationTime', updatedAt: 'modiTime' },
-  collection: MGO_POST_MODEL,
-  toJSON: {
-    transform: (doc: any, ret: any) => _.omit(ret, ['_id']),
+  toObject: {
+    transform: (doc: any, ret: any) => _.omit(ret, ['_id', '__v']),
   },
 })
 export class Post {

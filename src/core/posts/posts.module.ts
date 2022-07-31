@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { MGO_POST_MODEL } from 'src/constants';
+import { MGO_POSTS_MODEL } from 'src/constants';
 import { PostsController } from './posts.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { PostSchema } from './schemas/post.schema';
@@ -10,9 +10,9 @@ import { PostsUseCase } from './posts.ucase';
   imports: [
     MongooseModule.forFeature([
       {
-        name: MGO_POST_MODEL,
+        name: MGO_POSTS_MODEL,
         schema: PostSchema,
-        collection: MGO_POST_MODEL,
+        collection: MGO_POSTS_MODEL,
       },
     ]),
   ],
