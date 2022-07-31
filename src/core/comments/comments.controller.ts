@@ -1,13 +1,17 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Patch,
   Post,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
+import { ReqCommentDTO } from './dto/comment-req.dto';
 
 @ApiTags('comments')
 @Controller('comments')
@@ -24,7 +28,7 @@ export class CommentsController {
     summary: '取得留言',
   })
   @Get('/:id')
-  async findById() {
+  async findById(@Param('id', new ParseMongoIdPipe()) id: string) {
     return {};
   }
 
@@ -33,7 +37,10 @@ export class CommentsController {
   })
   @Post('/:id')
   @HttpCode(HttpStatus.CREATED)
-  async addById() {
+  async addById(
+    @Param('id', new ParseMongoIdPipe()) id: string,
+    @Body() body: ReqCommentDTO,
+  ) {
     return {};
   }
 
@@ -41,7 +48,10 @@ export class CommentsController {
     summary: '更新留言',
   })
   @Patch('/:id')
-  async updateById() {
+  async updateById(
+    @Param('id', new ParseMongoIdPipe()) id: string,
+    @Body() body: ReqCommentDTO,
+  ) {
     return {};
   }
 
@@ -49,7 +59,7 @@ export class CommentsController {
     summary: '刪除留言',
   })
   @Delete('/:id')
-  async deleteById() {
+  async deleteById(@Param('id', new ParseMongoIdPipe()) id: string) {
     return {};
   }
 }
