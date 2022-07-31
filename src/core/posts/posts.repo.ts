@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { MGO_POST_MODEL } from '../../constants';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Post, PostDocument } from './schema/post.schema';
+import { Post, PostDocument } from './schemas/post.schema';
 
 @Injectable()
-export class PostRepo {
+export class PostsRepo {
   constructor(
     @InjectModel(MGO_POST_MODEL)
     private readonly postModel: Model<PostDocument>,

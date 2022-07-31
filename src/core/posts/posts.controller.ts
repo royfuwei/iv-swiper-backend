@@ -8,18 +8,18 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
-import { PostUseCase } from './post.usecase';
+import { PostsUseCase } from './posts.ucase';
 
-@ApiTags('post')
-@Controller('post')
-export class PostController {
-  constructor(private readonly postUseCase: PostUseCase) {}
+@ApiTags('posts')
+@Controller('posts')
+export class PostsController {
+  constructor(private readonly postsUseCase: PostsUseCase) {}
   @ApiOperation({
     summary: '取得貼文',
   })
   @Get()
-  async findAllByQuery() {
-    return this.postUseCase.findAllByQuery();
+  async findByQuery() {
+    return this.postsUseCase.findByQuery();
   }
 
   @ApiOperation({
