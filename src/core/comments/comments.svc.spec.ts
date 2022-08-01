@@ -231,5 +231,52 @@ describe('CommentsService', () => {
       const results = commentsService.getNestedComments(testData);
       expect(results).toEqual(expectResults);
     });
+    it('should return test case 4', () => {
+      const testData: CommentDTO[] = [
+        {
+          id: 'root_A',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '留言內容01',
+        },
+        {
+          id: 'root_B',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '留言內容02',
+        },
+        {
+          id: 'root2',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '填寫留言內容',
+        },
+      ];
+      const expectResults: NestedCommentDTO[] = [
+        {
+          id: 'root_A',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '留言內容01',
+          children: [],
+        },
+        {
+          id: 'root_B',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '留言內容02',
+          children: [],
+        },
+        {
+          id: 'root2',
+          postId: '62e66d221d69cd0708605f32',
+          parentId: null,
+          content: '填寫留言內容',
+          children: [],
+        },
+      ];
+      const results = commentsService.getNestedComments(testData);
+      expect(results).toEqual(expectResults);
+    });
   });
 });
