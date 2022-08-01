@@ -16,19 +16,21 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
-import { ReqCommentDTO } from './dto/comment-req.dto';
+import { ReqCommentDataDTO } from './dto/comment-req.dto';
 import { ResCommentDTO, ResNestCommentDTO } from './dto/comment-res.dto';
+import { CommentsUseCase } from './comments.ucase';
 
 @ApiTags('comments')
 @Controller('comments')
 export class CommentsController {
+  constructor(private readonly commentsUseCase: CommentsUseCase) {}
   @ApiOperation({
     summary: '取得留言',
   })
   @ApiOkResponse({ type: ResNestCommentDTO })
   @Get('/:id')
   async findById(@Param('id', new ParseMongoIdPipe()) id: string) {
-    return {};
+    return this.commentsUseCase.findNestCommentById(id);
   }
 
   @ApiOperation({
@@ -39,9 +41,9 @@ export class CommentsController {
   @HttpCode(HttpStatus.CREATED)
   async addById(
     @Param('id', new ParseMongoIdPipe()) id: string,
-    @Body() body: ReqCommentDTO,
+    @Body() body: ReqCommentDataDTO,
   ) {
-    return {};
+    return this.commentsUseCase.addNestCommentById(id, body);
   }
 
   @ApiOperation({
@@ -51,9 +53,9 @@ export class CommentsController {
   @Patch('/:id')
   async updateById(
     @Param('id', new ParseMongoIdPipe()) id: string,
-    @Body() body: ReqCommentDTO,
+    @Body() body: ReqCommentDataDTO,
   ) {
-    return {};
+    return this.commentsUseCase.updateById(id, body);
   }
 
   @ApiOperation({
@@ -61,6 +63,6 @@ export class CommentsController {
   })
   @Delete('/:id')
   async deleteById(@Param('id', new ParseMongoIdPipe()) id: string) {
-    return {};
+    return this.commentsUseCase.deleteById(id);
   }
 }

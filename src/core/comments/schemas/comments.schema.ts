@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import _ from 'lodash';
+import _ = require('lodash');
 import { MGO_COMMENTS_MODEL } from '../../../constants';
 
 export type CommentDocument = Comment & Document;
@@ -7,8 +7,8 @@ export type CommentDocument = Comment & Document;
 @Schema({
   timestamps: { createdAt: 'creationTime', updatedAt: 'modiTime' },
   collection: MGO_COMMENTS_MODEL,
-  toJSON: {
-    transform: (doc: any, ret: any) => _.omit(ret, ['_id']),
+  toObject: {
+    transform: (doc: any, ret: any) => _.omit(ret, ['_id', '__v']),
   },
 })
 export class Comment {

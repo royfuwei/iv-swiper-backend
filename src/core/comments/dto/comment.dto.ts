@@ -16,7 +16,7 @@ export class CommentDataDTO {
     example: '填寫留言內容',
   })
   @IsString()
-  content: string;
+  content?: string;
 }
 
 export class CommentDTO extends CommentDataDTO {
@@ -25,13 +25,13 @@ export class CommentDTO extends CommentDataDTO {
   })
   @IsString()
   @IsMongoId()
-  readonly id: string;
+  readonly id?: string;
   @ApiProperty({
     description: '貼文id',
   })
   @IsString()
   @IsMongoId()
-  readonly postId: string;
+  readonly postId?: string;
   @ApiProperty({
     description: '上層留言id',
   })
@@ -43,27 +43,27 @@ export class CommentDTO extends CommentDataDTO {
     description: 'userid',
   })
   @IsString()
-  readonly uid: string;
+  readonly uid?: string;
   @ApiProperty({
     description: '是否封存',
     default: false,
   })
   @IsBoolean()
-  readonly archived: boolean;
+  readonly archived?: boolean;
 
   @ApiProperty({
     description: '建立時間',
   })
   @IsDate()
   @Transform((value) => new Date(value.value), { toClassOnly: true })
-  readonly creationTime: Date;
+  readonly creationTime?: Date;
 
   @ApiProperty({
     description: '修改時間',
   })
   @IsDate()
   @Transform((value) => new Date(value.value), { toClassOnly: true })
-  readonly modiTime: Date;
+  readonly modiTime?: Date;
 }
 
 export class NestCommentDTO extends CommentDTO {

@@ -3,6 +3,8 @@ import { CommentsController } from './comments.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MGO_COMMENTS_MODEL } from 'src/constants';
 import { CommentSchema } from './schemas/comments.schema';
+import { CommentsUseCase } from './comments.ucase';
+import { CommentsRepo } from './comments.repo';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import { CommentSchema } from './schemas/comments.schema';
       },
     ]),
   ],
+  providers: [CommentsUseCase, CommentsRepo],
   controllers: [CommentsController],
 })
 export class CommentsModule {}
