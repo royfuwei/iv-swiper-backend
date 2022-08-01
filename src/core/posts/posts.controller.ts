@@ -18,11 +18,11 @@ import {
 } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
 import { ReqPostDTO } from './dto/post-req.dto';
-import { ResPostDTO, ResPostsNestCommentDTO } from './dto/post-res.dto';
+import { ResPostDTO, ResPostsNestedCommentDTO } from './dto/post-res.dto';
 import { PostsUseCase } from './posts.ucase';
 import { ReqCommentDataDTO } from '../comments/dto/comment-req.dto';
 import { ApiPaginatedResponse } from 'src/infrastructures/util/paginated.dto';
-import { PostNestCommentDTO } from './dto/post.dto';
+import { PostNestedCommentDTO } from './dto/post.dto';
 import { ResCommentDTO } from '../comments/dto/comment-res.dto';
 
 @ApiTags('posts')
@@ -32,9 +32,9 @@ export class PostsController {
   @ApiOperation({
     summary: '取得貼文',
   })
-  @ApiPaginatedResponse(PostNestCommentDTO)
+  @ApiPaginatedResponse(PostNestedCommentDTO)
   @Get()
-  async findByQuery(): Promise<ResPostsNestCommentDTO> {
+  async findByQuery(): Promise<ResPostsNestedCommentDTO> {
     return this.postsUseCase.findByQuery();
   }
 

@@ -1,4 +1,4 @@
-import { CommentDTO, NestCommentDTO } from './comment.dto';
+import { CommentDTO, NestedCommentDTO } from './comment.dto';
 
-export class ResNestCommentDTO extends NestCommentDTO {}
+export class ResNestedCommentDTO extends NestedCommentDTO {}
 export class ResCommentDTO extends CommentDTO {}

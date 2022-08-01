@@ -17,7 +17,7 @@ import {
 } from '@nestjs/swagger';
 import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
 import { ReqCommentDataDTO } from './dto/comment-req.dto';
-import { ResCommentDTO, ResNestCommentDTO } from './dto/comment-res.dto';
+import { ResCommentDTO, ResNestedCommentDTO } from './dto/comment-res.dto';
 import { CommentsUseCase } from './comments.ucase';
 
 @ApiTags('comments')
@@ -27,10 +27,10 @@ export class CommentsController {
   @ApiOperation({
     summary: '取得留言',
   })
-  @ApiOkResponse({ type: ResNestCommentDTO })
+  @ApiOkResponse({ type: ResNestedCommentDTO })
   @Get('/:id')
   async findById(@Param('id', new ParseMongoIdPipe()) id: string) {
-    return this.commentsUseCase.findNestCommentById(id);
+    return this.commentsUseCase.findNestedCommentById(id);
   }
 
   @ApiOperation({
@@ -43,7 +43,7 @@ export class CommentsController {
     @Param('id', new ParseMongoIdPipe()) id: string,
     @Body() body: ReqCommentDataDTO,
   ) {
-    return this.commentsUseCase.addNestCommentById(id, body);
+    return this.commentsUseCase.addNestedCommentById(id, body);
   }
 
   @ApiOperation({

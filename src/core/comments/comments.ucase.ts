@@ -1,7 +1,7 @@
 import _ = require('lodash');
 import { Injectable } from '@nestjs/common';
 import { CommentsRepo } from './comments.repo';
-import { ResCommentDTO, ResNestCommentDTO } from './dto/comment-res.dto';
+import { ResCommentDTO, ResNestedCommentDTO } from './dto/comment-res.dto';
 import { ReqCommentDataDTO } from './dto/comment-req.dto';
 import { CommentDTO } from './dto/comment.dto';
 import { FilterQuery } from 'mongoose';
@@ -17,16 +17,16 @@ export class CommentsUseCase {
   /**
    * 取得巢狀留言
    * @param id 留言id
-   * @returns ResNestCommentDTO
+   * @returns ResNestedCommentDTO
    */
-  async findNestCommentById(id: string): Promise<ResNestCommentDTO> {
+  async findNestedCommentById(id: string): Promise<ResNestedCommentDTO> {
     const find = await this.commentsRepo.findById(id);
     const comments = await this.findCommentsByParentId(id);
     const nestedComments = this.commentsSvc.getNestedComments([
       find,
       ...comments,
     ]);
-    const result: ResNestCommentDTO = nestedComments[0];
+    const result: ResNestedCommentDTO = nestedComments[0];
     return result;
   }
 
@@ -58,7 +58,7 @@ export class CommentsUseCase {
    * @param body 留言內容
    * @returns ResCommentDTO
    */
-  async addNestCommentById(
+  async addNestedCommentById(
     id: string,
     body: ReqCommentDataDTO,
   ): Promise<ResCommentDTO> {

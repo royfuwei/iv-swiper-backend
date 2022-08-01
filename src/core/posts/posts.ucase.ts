@@ -27,13 +27,13 @@ export class PostsUseCase {
     const postIds = posts.map((item) => item.id);
     const comments = await this.getCommentsByIds(postIds);
     const nestedComments = this.commentsSvc.getNestedComments(comments);
-    const postsNestComments = this.postsSvc.getPostsNestComments(
+    const postsNestedComments = this.postsSvc.getPostsNestedComments(
       posts,
       nestedComments,
     );
     const result: PaginatedDTO<any> = new PaginatedDTO();
-    result.items = postsNestComments;
-    result.total = postsNestComments.length;
+    result.items = postsNestedComments;
+    result.total = postsNestedComments.length;
     return result;
   }
 

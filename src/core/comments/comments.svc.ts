@@ -1,10 +1,10 @@
 import _ = require('lodash');
 import { Injectable } from '@nestjs/common';
-import { CommentDTO, NestCommentDTO } from './dto/comment.dto';
+import { CommentDTO, NestedCommentDTO } from './dto/comment.dto';
 
 @Injectable()
 export class CommentsService {
-  getNestedComments(comments: CommentDTO[]): NestCommentDTO[] {
+  getNestedComments(comments: CommentDTO[]): NestedCommentDTO[] {
     const [rootSet, nestedCommentsMap] =
       this.toParentChildMapWithRoots(comments);
     const tree = this.toTree(rootSet, nestedCommentsMap);
@@ -13,10 +13,10 @@ export class CommentsService {
 
   protected toParentChildMapWithRoots(
     comments: CommentDTO[],
-  ): [Set<string>, Map<string, NestCommentDTO>] {
+  ): [Set<string>, Map<string, NestedCommentDTO>] {
     const ids = comments.map((item) => item.id);
     const rootSet: Set<string> = new Set();
-    const nestedCommentsMap: Map<string, NestCommentDTO> = new Map();
+    const nestedCommentsMap: Map<string, NestedCommentDTO> = new Map();
     for (const comment of comments) {
       const { id, parentId } = comment;
       const newParentId = parentId ? parentId : id;
@@ -24,11 +24,11 @@ export class CommentsService {
       if (isRootInArr) rootSet.add(id);
       const mapHasParentComment = nestedCommentsMap.has(parentId);
       const mapHasComment = nestedCommentsMap.has(id);
-      let getMapThisComment: NestCommentDTO = _.assign({}, comment, {
+      let getMapThisComment: NestedCommentDTO = _.assign({}, comment, {
         children: [],
       });
       if (mapHasComment) getMapThisComment = nestedCommentsMap.get(id);
-      let getMapParentComment: NestCommentDTO;
+      let getMapParentComment: NestedCommentDTO;
       if (mapHasParentComment) {
         getMapParentComment = nestedCommentsMap.get(newParentId);
       } else {
@@ -46,9 +46,9 @@ export class CommentsService {
 
   protected toTree(
     rootSet: Set<string>,
-    nestedCommentsMap: Map<string, NestCommentDTO>,
-  ): NestCommentDTO[] {
-    const results: NestCommentDTO[] = [];
+    nestedCommentsMap: Map<string, NestedCommentDTO>,
+  ): NestedCommentDTO[] {
+    const results: NestedCommentDTO[] = [];
     for (const rootId of rootSet) {
       const comment = nestedCommentsMap.get(rootId);
       results.push(comment);

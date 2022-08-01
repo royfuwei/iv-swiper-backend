@@ -66,14 +66,14 @@ export class CommentDTO extends CommentDataDTO {
   readonly modiTime?: Date;
 }
 
-export class NestCommentDTO extends CommentDTO {
+export class NestedCommentDTO extends CommentDTO {
   @ApiProperty({
     description: '巢狀留言',
     isArray: true,
-    type: [NestCommentDTO],
+    type: [NestedCommentDTO],
   })
   @IsArray()
   @ValidateNested({ each: true })
-  @Type(() => NestCommentDTO)
-  children: NestCommentDTO[];
+  @Type(() => NestedCommentDTO)
+  children: NestedCommentDTO[];
 }

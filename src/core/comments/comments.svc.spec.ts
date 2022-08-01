@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { CommentsService } from './comments.svc';
-import { CommentDTO, NestCommentDTO } from './dto/comment.dto';
+import { CommentDTO, NestedCommentDTO } from './dto/comment.dto';
 
 describe('CommentsService', () => {
   let commentsService: CommentsService;
@@ -16,7 +16,7 @@ describe('CommentsService', () => {
   describe('getNestedComments: ', () => {
     it('should return empty results', () => {
       const testData: CommentDTO[] = [];
-      const expectResults: NestCommentDTO[] = [];
+      const expectResults: NestedCommentDTO[] = [];
       const results = commentsService.getNestedComments(testData);
       expect(results).toEqual(expectResults);
     });
@@ -41,7 +41,7 @@ describe('CommentsService', () => {
           content: '留言內容02',
         },
       ];
-      const expectResults: NestCommentDTO[] = [
+      const expectResults: NestedCommentDTO[] = [
         {
           id: 'root',
           postId: '62e66d221d69cd0708605f32',
@@ -107,7 +107,7 @@ describe('CommentsService', () => {
           content: '留言內容02',
         },
       ];
-      const expectResults: NestCommentDTO[] = [
+      const expectResults: NestedCommentDTO[] = [
         {
           id: 'root',
           postId: '62e66d221d69cd0708605f32',
@@ -189,7 +189,7 @@ describe('CommentsService', () => {
           content: '留言內容02',
         },
       ];
-      const expectResults: NestCommentDTO[] = [
+      const expectResults: NestedCommentDTO[] = [
         {
           id: 'root_A',
           postId: '62e66d221d69cd0708605f32',

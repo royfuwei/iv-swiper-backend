@@ -1,15 +1,15 @@
 import _ = require('lodash');
 import { Injectable } from '@nestjs/common';
-import { NestCommentDTO } from '../comments/dto/comment.dto';
-import { PostDTO, PostNestCommentDTO } from './dto/post.dto';
+import { NestedCommentDTO } from '../comments/dto/comment.dto';
+import { PostDTO, PostNestedCommentDTO } from './dto/post.dto';
 
 @Injectable()
 export class PostsService {
-  getPostsNestComments(
+  getPostsNestedComments(
     posts: PostDTO[],
-    nestedComments: NestCommentDTO[],
-  ): PostNestCommentDTO[] {
-    const nestedCommentsMap: Map<string, NestCommentDTO[]> =
+    nestedComments: NestedCommentDTO[],
+  ): PostNestedCommentDTO[] {
+    const nestedCommentsMap: Map<string, NestedCommentDTO[]> =
       nestedComments.reduce((pre, cur) => {
         const comments = [];
         const postId = cur.postId;
@@ -19,8 +19,8 @@ export class PostsService {
         comments.push(cur);
         pre.set(postId, comments);
         return pre;
-      }, new Map<string, NestCommentDTO[]>());
-    const results: PostNestCommentDTO[] = posts.map((item) =>
+      }, new Map<string, NestedCommentDTO[]>());
+    const results: PostNestedCommentDTO[] = posts.map((item) =>
       _.assign({}, item, { comments: nestedCommentsMap.get(item.id) }),
     );
     return results;

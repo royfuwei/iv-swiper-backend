@@ -7,7 +7,7 @@ import {
   IsArray,
 } from 'class-validator';
 import { Transform } from 'class-transformer';
-import { CommentDTO, NestCommentDTO } from '../../comments/dto/comment.dto';
+import { CommentDTO, NestedCommentDTO } from '../../comments/dto/comment.dto';
 
 export class PostDataDTO {
   @ApiProperty({
@@ -71,12 +71,12 @@ export class PostCommentDTO extends PostDTO {
   comments: CommentDTO[];
 }
 
-export class PostNestCommentDTO extends PostDTO {
+export class PostNestedCommentDTO extends PostDTO {
   @ApiProperty({
     description: '貼文的巢狀留言',
     isArray: true,
-    type: NestCommentDTO,
+    type: NestedCommentDTO,
   })
   @IsArray()
-  comments: NestCommentDTO[];
+  comments: NestedCommentDTO[];
 }
