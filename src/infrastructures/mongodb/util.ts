@@ -1,5 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
-import { Model } from 'mongoose';
+import { FilterQuery, Model, QueryOptions } from 'mongoose';
 import _ = require('lodash');
 
 export class BaseMongoRepo<TModel, TData> {
@@ -32,8 +32,12 @@ export class BaseMongoRepo<TModel, TData> {
     return this.findById(id);
   }
 
-  async findByFilter(): Promise<TData[]> {
-    const results = await this.model.find().exec();
+  async findByFilter(
+    filter: FilterQuery<TData> = {},
+    projection?: any,
+    options?: QueryOptions,
+  ): Promise<TData[]> {
+    const results = await this.model.find(filter, projection, options).exec();
     return results.map((item) => item.toObject({ getters: true }));
   }
 }
