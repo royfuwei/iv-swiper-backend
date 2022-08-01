@@ -10,6 +10,13 @@ import {
 } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
 
+export class CountGroupByPostIdDTO {
+  _id: {
+    postId: string;
+  };
+  count: number;
+}
+
 export class CommentDataDTO {
   @ApiProperty({
     description: '留言內容',
