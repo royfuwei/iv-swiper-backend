@@ -1,0 +1,28 @@
+version: "3"
+services:
+  api:
+    build:
+      context: .
+    container_name: swiper_api
+    restart: always
+    depends_on:
+      - mongo
+    # ports:
+    #   - 3000:3000
+    networks:
+      - devops
+
+
+  mongo:
+    container_name: swiper_mongo
+    image: mongo:5.0.8
+    restart: always
+    volumes:
+      - ./data:/data/db
+    networks:
+      - devops
+
+
+networks:
+  devops:
+    external: true
