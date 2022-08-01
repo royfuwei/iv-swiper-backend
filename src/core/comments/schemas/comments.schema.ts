@@ -19,7 +19,7 @@ export class Comment {
 
   @Prop({
     type: String,
-    required: true,
+    default: null,
   })
   postId: string;
 
