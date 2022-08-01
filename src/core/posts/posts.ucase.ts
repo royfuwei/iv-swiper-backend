@@ -71,7 +71,7 @@ export class PostsUseCase {
     id: string,
     body: ReqCommentDataDTO,
   ): Promise<ResCommentDTO> {
-    const create: CommentDTO = _.assign({}, body, { postId: id, parentId: id });
+    const create: CommentDTO = _.assign({}, body, { postId: id });
     const result: ResCommentDTO = await this.commentsRepo.add(create);
     return result;
   }
