@@ -19,13 +19,16 @@ export class Comment {
 
   @Prop({
     type: String,
-    default: null,
+    required: true,
+    index: {
+      name: 'postIdIdx',
+    },
   })
   postId: string;
 
   @Prop({
     type: String,
-    required: true,
+    default: null,
   })
   parentId: string;
 
