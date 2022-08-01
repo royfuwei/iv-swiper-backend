@@ -9,20 +9,41 @@ import { ReqCommentDataDTO } from '../comments/dto/comment-req.dto';
 import { CommentsRepo } from '../comments/comments.repo';
 import { CommentDTO } from '../comments/dto/comment.dto';
 import { ResCommentDTO } from '../comments/dto/comment-res.dto';
+import { CommentsService } from '../comments/comments.svc';
+import { FilterQuery } from 'mongoose';
+import { PostsService } from './posts.service';
 
 @Injectable()
 export class PostsUseCase {
   constructor(
     private readonly postsRepo: PostsRepo,
     private commentsRepo: CommentsRepo,
+    private commentsSvc: CommentsService,
+    private postsSvc: PostsService,
   ) {}
 
   async findByQuery(): Promise<PaginatedDTO<any>> {
-    const data = await this.postsRepo.findByFilter();
+    const posts = await this.postsRepo.findByFilter();
+    const postIds = posts.map((item) => item.id);
+    const comments = await this.getCommentsByIds(postIds);
+    const nestedComments = this.commentsSvc.getNestedComments(comments);
+    const postsNestComments = this.postsSvc.getPostsNestComments(
+      posts,
+      nestedComments,
+    );
     const result: PaginatedDTO<any> = new PaginatedDTO();
-    result.items = data;
-    result.total = data.length;
+    result.items = postsNestComments;
+    result.total = postsNestComments.length;
     return result;
+  }
+
+  protected async getCommentsByIds(ids: string[]): Promise<CommentDTO[]> {
+    const filter: FilterQuery<CommentDTO> = {
+      postId: {
+        $in: ids,
+      },
+    };
+    return await this.commentsRepo.findByFilter(filter);
   }
 
   /**

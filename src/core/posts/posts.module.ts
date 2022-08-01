@@ -8,6 +8,8 @@ import { PostsUseCase } from './posts.ucase';
 import { CommentsModule } from '../comments/comments.module';
 import { CommentsRepo } from '../comments/comments.repo';
 import { CommentSchema } from '../comments/schemas/comments.schema';
+import { CommentsService } from '../comments/comments.svc';
+import { PostsService } from './posts.service';
 
 @Module({
   imports: [
@@ -27,7 +29,13 @@ import { CommentSchema } from '../comments/schemas/comments.schema';
     ]),
     CommentsModule,
   ],
-  providers: [PostsUseCase, PostsRepo, CommentsRepo],
+  providers: [
+    PostsUseCase,
+    PostsRepo,
+    CommentsRepo,
+    CommentsService,
+    PostsService,
+  ],
   controllers: [PostsController],
 })
 export class PostsModule {}
