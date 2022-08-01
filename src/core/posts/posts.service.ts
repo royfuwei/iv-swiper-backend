@@ -11,17 +11,21 @@ export class PostsService {
   ): PostNestedCommentDTO[] {
     const nestedCommentsMap: Map<string, NestedCommentDTO[]> =
       nestedComments.reduce((pre, cur) => {
-        const comments = [];
+        let comments: NestedCommentDTO[] = [];
         const postId = cur.postId;
         if (pre.has(postId)) {
-          comments.concat(pre.get(postId));
+          comments = pre.get(postId);
         }
         comments.push(cur);
         pre.set(postId, comments);
         return pre;
       }, new Map<string, NestedCommentDTO[]>());
     const results: PostNestedCommentDTO[] = posts.map((item) =>
-      _.assign({}, item, { comments: nestedCommentsMap.get(item.id) }),
+      _.assign({}, item, {
+        comments: nestedCommentsMap.has(item.id)
+          ? nestedCommentsMap.get(item.id)
+          : [],
+      }),
     );
     return results;
   }
