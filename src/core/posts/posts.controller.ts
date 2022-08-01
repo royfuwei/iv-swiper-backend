@@ -20,7 +20,7 @@ import { ParseMongoIdPipe } from 'src/infrastructures/pipe/parse-mongo-id.pipe';
 import { ReqPostDTO } from './dto/post-req.dto';
 import { ResPostDTO, ResPostsNestCommentDTO } from './dto/post-res.dto';
 import { PostsUseCase } from './posts.ucase';
-import { ReqCommentDTO } from '../comments/dto/comment-req.dto';
+import { ReqCommentDataDTO } from '../comments/dto/comment-req.dto';
 import { ApiPaginatedResponse } from 'src/infrastructures/util/paginated.dto';
 import { PostNestCommentDTO } from './dto/post.dto';
 import { ResCommentDTO } from '../comments/dto/comment-res.dto';
@@ -45,7 +45,7 @@ export class PostsController {
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async addPost(@Headers('uid') uid: string, @Body() body: ReqPostDTO) {
-    return this.postsUseCase.createPost(body, uid);
+    return this.postsUseCase.addPost(body, uid);
   }
 
   @ApiOperation({
@@ -77,8 +77,8 @@ export class PostsController {
   @HttpCode(HttpStatus.CREATED)
   async addRootCommentById(
     @Param('id', new ParseMongoIdPipe()) id: string,
-    @Body() body: ReqCommentDTO,
+    @Body() body: ReqCommentDataDTO,
   ) {
-    return {};
+    return this.postsUseCase.addRootCommentById(id, body);
   }
 }
