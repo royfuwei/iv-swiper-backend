@@ -30,12 +30,12 @@ import { ResCommentDTO } from '../comments/dto/comment-res.dto';
 export class PostsController {
   constructor(private readonly postsUseCase: PostsUseCase) {}
   @ApiOperation({
-    summary: '取得貼文',
+    summary: '取得最多留言的10筆貼文(先HotCode)',
   })
   @ApiPaginatedResponse(PostNestedCommentDTO)
   @Get()
   async findByQuery(): Promise<ResPostsNestedCommentDTO> {
-    return this.postsUseCase.findByQuery();
+    return this.postsUseCase.findByAggregateComments();
   }
 
   @ApiOperation({

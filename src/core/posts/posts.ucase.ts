@@ -3,7 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { PaginatedDTO } from '../../infrastructures/util/paginated.dto';
 import { ReqPostDTO } from './dto/post-req.dto';
 import { PostsRepo } from './posts.repo';
-import { CreatePostDataDTO, PostDTO } from './dto/post.dto';
+import {
+  CreatePostDataDTO,
+  PostDTO,
+  PostNestedCommentDTO,
+} from './dto/post.dto';
 import { ResPostDTO } from './dto/post-res.dto';
 import { ReqCommentDataDTO } from '../comments/dto/comment-req.dto';
 import { CommentsRepo } from '../comments/comments.repo';
@@ -11,6 +15,7 @@ import { CommentDTO } from '../comments/dto/comment.dto';
 import { ResCommentDTO } from '../comments/dto/comment-res.dto';
 import { CommentsService } from '../comments/comments.svc';
 import { FilterQuery } from 'mongoose';
+import { ObjectId } from 'bson';
 import { PostsService } from './posts.service';
 
 @Injectable()
@@ -22,19 +27,69 @@ export class PostsUseCase {
     private postsSvc: PostsService,
   ) {}
 
-  async findByQuery(): Promise<PaginatedDTO<any>> {
-    const posts = await this.postsRepo.findByFilter();
-    const postIds = posts.map((item) => item.id);
-    const comments = await this.getCommentsByIds(postIds);
+  /**
+   * 取得最多留言的10筆貼文
+   * @param limit 限制數量(目前先Hotcode 10)
+   * @returns PaginatedDTO<PostNestedCommentDTO>
+   */
+  async findByAggregateComments(
+    limit = 10,
+  ): Promise<PaginatedDTO<PostNestedCommentDTO>> {
+    /* 取得留言數最多的貼文 */
+    const aggreCount = await this.commentsRepo.aggregateCountByPostId(limit);
+    const aggrePostIds = aggreCount.map((item) => item._id.postId);
+    const objectIds: ObjectId[] = aggrePostIds.map((id) => new ObjectId(id));
+    const aggreFilter: FilterQuery<PostDTO> = {
+      _id: {
+        $in: objectIds,
+      },
+    };
+    const aggrePosts = await this.postsRepo.findByFilter(aggreFilter);
+    /* 當最多留言的貼文數量 少於limit，補上數量 */
+    const otherLimit = limit - aggrePosts.length;
+    let otherPostIds: string[] = [];
+    let otherPosts: PostDTO[] = [];
+    if (otherLimit > 0) {
+      otherPosts = await this.findPostsNINObjectIds(objectIds, otherLimit);
+      otherPostIds = otherPosts.map((item) => item.id);
+    }
+    /* 貼文合併留言 */
+    const orderPostIds = aggrePostIds.concat(otherPostIds);
+    const posts = aggrePosts.concat(otherPosts);
+    const comments = await this.getCommentsByIds(orderPostIds);
     const nestedComments = this.commentsSvc.getNestedComments(comments);
     const postsNestedComments = this.postsSvc.getPostsNestedComments(
       posts,
       nestedComments,
+      orderPostIds,
     );
     const result: PaginatedDTO<any> = new PaginatedDTO();
     result.items = postsNestedComments;
     result.total = postsNestedComments.length;
     return result;
+  }
+
+  /**
+   * 取的ObjectIds 以外的貼文
+   * @param ninObjectIds 不包含的ObjectIds
+   * @param limit 限制搜尋數量
+   * @returns PostDTO[]
+   */
+  protected async findPostsNINObjectIds(
+    ninObjectIds: ObjectId[],
+    limit: number,
+  ): Promise<PostDTO[]> {
+    const otherFilter: FilterQuery<PostDTO> = {
+      _id: {
+        $nin: ninObjectIds,
+      },
+    };
+    const otherPosts = await this.postsRepo.findByFilter(
+      otherFilter,
+      {},
+      { limit },
+    );
+    return otherPosts;
   }
 
   protected async getCommentsByIds(ids: string[]): Promise<CommentDTO[]> {
