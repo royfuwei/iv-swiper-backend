@@ -36,32 +36,46 @@ export class PostsUseCase {
     limit = 10,
   ): Promise<PaginatedDTO<PostNestedCommentDTO>> {
     /* 取得留言數最多的貼文 */
-    const aggreCount = await this.commentsRepo.aggregateCountByPostId(limit);
-    const aggrePostIds = aggreCount.map((item) => item._id.postId);
-    const objectIds: ObjectId[] = aggrePostIds.map((id) => new ObjectId(id));
-    const aggreFilter: FilterQuery<PostDTO> = {
-      _id: {
-        $in: objectIds,
+    const aggreCountSortPosts =
+      await this.commentsRepo.aggregateCountByPostId();
+    const sortAggrePostIds = aggreCountSortPosts.map((item) => item._id.postId);
+    const sortAggreObjectIds: ObjectId[] = sortAggrePostIds.map(
+      (id) => new ObjectId(id),
+    );
+    const aggrePosts = await this.postsRepo.findByFilter(
+      {
+        _id: {
+          $in: sortAggreObjectIds,
+        },
+        archived: false,
       },
-    };
-    const aggrePosts = await this.postsRepo.findByFilter(aggreFilter);
+      {},
+      { limit },
+    );
+    const aggrePostIds = aggrePosts.map((item) => item.id);
     /* 當最多留言的貼文數量 少於limit，補上數量 */
     const otherLimit = limit - aggrePosts.length;
     let otherPostIds: string[] = [];
     let otherPosts: PostDTO[] = [];
     if (otherLimit > 0) {
-      otherPosts = await this.findPostsNINObjectIds(objectIds, otherLimit);
+      otherPosts = await this.findPostsNINObjectIds(
+        sortAggreObjectIds,
+        otherLimit,
+      );
       otherPostIds = otherPosts.map((item) => item.id);
     }
     /* 貼文合併留言 */
-    const orderPostIds = aggrePostIds.concat(otherPostIds);
+    const sortPostIds = sortAggrePostIds.filter(
+      (item) => aggrePostIds.indexOf(item) > -1,
+    );
+    const mergeSortPostIds = sortPostIds.concat(otherPostIds);
     const posts = aggrePosts.concat(otherPosts);
-    const comments = await this.getCommentsByIds(orderPostIds);
+    const comments = await this.getCommentsByIds(mergeSortPostIds);
     const nestedComments = this.commentsSvc.getNestedComments(comments);
     const postsNestedComments = this.postsSvc.getPostsNestedComments(
       posts,
       nestedComments,
-      orderPostIds,
+      mergeSortPostIds,
     );
     const result: PaginatedDTO<any> = new PaginatedDTO();
     result.items = postsNestedComments;
@@ -83,6 +97,7 @@ export class PostsUseCase {
       _id: {
         $nin: ninObjectIds,
       },
+      archived: false,
     };
     const otherPosts = await this.postsRepo.findByFilter(
       otherFilter,

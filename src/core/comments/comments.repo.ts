@@ -20,7 +20,7 @@ export class CommentsRepo extends BaseMongoRepo<CommentDocument, CommentDTO> {
    * @param limit 限制筆數
    * @returns CountGroupByPostIdDTO[]
    */
-  async aggregateCountByPostId(limit = 10): Promise<CountGroupByPostIdDTO[]> {
+  async aggregateCountByPostId(): Promise<CountGroupByPostIdDTO[]> {
     const groupQuery = {
       _id: {
         postId: `$postId`,
@@ -32,7 +32,6 @@ export class CommentsRepo extends BaseMongoRepo<CommentDocument, CommentDTO> {
     const results = await this.commentsModel.aggregate<CountGroupByPostIdDTO>([
       { $group: groupQuery },
       { $sort: { count: -1 } },
-      { $limit: limit },
     ]);
     return results;
   }
