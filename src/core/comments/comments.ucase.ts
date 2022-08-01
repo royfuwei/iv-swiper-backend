@@ -48,6 +48,7 @@ export class CommentsUseCase {
     id: string,
     body: ReqCommentDataDTO,
   ): Promise<ResCommentDTO> {
+    await this.commentsRepo.findById(id);
     const result: ResCommentDTO = await this.commentsRepo.updateById(id, body);
     return result;
   }
@@ -77,6 +78,7 @@ export class CommentsUseCase {
    * @returns ResCommentDTO
    */
   async deleteById(id: string): Promise<ResCommentDTO> {
+    await this.commentsRepo.findById(id);
     const update: CommentDTO = {
       archived: true,
     };

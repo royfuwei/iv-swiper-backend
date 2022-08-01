@@ -10,6 +10,9 @@ export class BaseMongoRepo<TModel, TData> {
 
   async findById(id: string): Promise<TData> {
     const result = await this.model.findById(id).exec();
+    if (_.isNull(result)) {
+      throw new NotFoundException(id);
+    }
     return result.toObject<TData>({ getters: true });
   }
 

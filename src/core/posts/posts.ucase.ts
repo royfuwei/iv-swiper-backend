@@ -135,6 +135,7 @@ export class PostsUseCase {
    * @returns ResPostDTO
    */
   async updateById(id: string, body: ReqPostDTO): Promise<ResPostDTO> {
+    await this.postsRepo.findById(id);
     const result: ResPostDTO = await this.postsRepo.updateById(id, body);
     return result;
   }
@@ -145,6 +146,7 @@ export class PostsUseCase {
    * @returns
    */
   async deleteById(id: string): Promise<boolean> {
+    await this.postsRepo.findById(id);
     const update: PostDTO = {
       archived: true,
     };
@@ -162,6 +164,7 @@ export class PostsUseCase {
     id: string,
     body: ReqCommentDataDTO,
   ): Promise<ResCommentDTO> {
+    await this.postsRepo.findById(id);
     const create: CommentDTO = _.assign({}, body, { postId: id });
     const result: ResCommentDTO = await this.commentsRepo.add(create);
     return result;
