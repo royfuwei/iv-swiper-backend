@@ -36,3 +36,51 @@
 - **archived:** 是否封存
 - **creationTime:** 建立的時間
 - **modiTime:** 最後被修改的時間
+
+## 使用Aggregate 篩選出貼文留言數量
+
+- stage1
+    - 將`postId`留言群組統計數量
+    - `$group`
+    ```js
+    {
+        _id: {
+            postId: '$postId'
+        },
+        count: {
+            $sum: 1
+        }
+    }
+    ```
+- stage2
+    - 依據統計數量排序
+    - `$sort`
+    ```js
+    {
+        count: -1
+    }
+    ```
+
+### 取得個貼文中留言數量排序結果:
+```js
+[
+    {
+        _id: {
+            postId:"62e66d949196b53c7ac78338"
+        },
+        count:9
+    },
+    {
+        _id: {
+            postId:"62e66dcabd0a936412602378"
+        },
+        count:5
+    },
+    {
+        _id: {
+            postId:"62e66d221d69cd0708605f32"
+        },
+        count:2
+    },
+]
+```
