@@ -5,6 +5,7 @@ import { MGO_COMMENTS_MODEL } from 'src/constants';
 import { CommentSchema } from './schemas/comments.schema';
 import { CommentsUseCase } from './comments.ucase';
 import { CommentsRepo } from './comments.repo';
+import { CommentsService } from './comments.svc';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { CommentsRepo } from './comments.repo';
       },
     ]),
   ],
-  providers: [CommentsUseCase, CommentsRepo],
+  providers: [CommentsUseCase, CommentsRepo, CommentsService],
   controllers: [CommentsController],
 })
 export class CommentsModule {}
