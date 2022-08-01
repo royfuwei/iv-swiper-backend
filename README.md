@@ -12,6 +12,17 @@ Swiper Backend Engineer 題目實作
 - `PORT`: server port`3000`
 - `MONGO_ADDR`: mongodb 的連線位址, 預設為`mongodb:27017`
 
+### docker-compose
+```sh
+vim docker-compose.yml
+    ports:
+      - 3000:3000
+```
+
+```sh
+docker-compose up --build
+```
+
 ---
 ## How to start 
 
